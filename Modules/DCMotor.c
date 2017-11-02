@@ -21,12 +21,12 @@ void initDCMotor()
   CH4_COUNT_CLK_DIRECTLY;
   
   //Period
-  PWMPER4 = _22Khz;
-  PWMPER5 = _22Khz;
+  PWMPER4 = _22VKhz;
+  PWMPER5 = _22VKhz;
   
   //Duty cycle
-  PWMDTY4 =_70P;
-  PWMDTY5 =_70P;
+  PWMDTY4 =_22Khz;
+  PWMDTY5 =_22VKhz;
   
    
 }
@@ -43,8 +43,55 @@ void disableChannel(unsigned char channel)
 
 
 
+//Note: Motor doesnt turn until speed value of 55 
+void setMotor(unsigned char speed, unsigned char direction, unsigned char motor) 
+{
+
+ //Calculate speed in terms of pwm duty cycle
+ unsigned char pwm = (unsigned char)((231U*(speed)+2369U+50)/100U); //+50 to round up the answer
+ switch(motor)
+  {
+    case MOT1:
+    MOT1_BUS(direction);
+    PWMDTY4 = pwm;
+    break;
+  
+    case MOT2:
+    MOT2_BUS(direction);
+    PWMDTY5 = pwm;
+    break;
+ }
+}
+
+
+void setMoterAlternate(unsigned directionM1,unsigned directionM2) 
+{
+  MOT1_BUS(directionM1);
+  MOT2_BUS(directionM2);
+}
+  
+
+
+void setSpeed(unsigned char speed,unsigned char motor) 
+{
+  unsigned char pwm = (unsigned char)((231U*(speed)+2369U+50)/100U); //+50 to round up the answer
+ 
+  switch(motor)
+  {
+    case MOT1:
+    PWMDTY4 = pwm;
+    break;
+  
+    case MOT2:
+    PWMDTY5 = pwm;
+    break;
+  } 
+}
+
+/***************Old functions**********************
 void setMotor(unsigned char modifier, unsigned char specifier,volatile unsigned char attribute) 
 {
+
 
   if (modifier == SPEED) 
   {
@@ -71,7 +118,13 @@ void setMotor(unsigned char modifier, unsigned char specifier,volatile unsigned 
       }
   }
   
-}
+}*/
+
+  
+  
+  
+
+
         
     
     
@@ -87,78 +140,3 @@ void setMotor(unsigned char modifier, unsigned char specifier,volatile unsigned 
 
 
 
-/*
-int setMotor(int num,...) 
-{
- unsigned char modifier;//Speed or Direction
- unsigned char specifier;//DutyChannel or Motor Direction
- 
- va_list motorState;
- va_start (motorState,num);
- 
- modifier = (unsigned char)va_arg(motorState,int);
- 
- //Changing the speed of one motor
- if (num == 3 && modifier == SPEED ) 
- {
-    specifier = (unsigned char)va_arg(motorState,int);
-    
-    switch(specifier)//Choose which channel to modify 
-    {
-      case CH4S:
-      PWMDTY4 = (unsigned char)va_arg(motorState,int);
-      break;
-      case CH5S:
-      PWMDTY5 = (unsigned char)va_arg(motorState,int);
-      break;
-    }
- } 
- 
- //Changing the direction of one motor
- else if (num == 3 && modifier == DIREC) 
- {
-   specifier = (unsigned char)va_arg(motorState,int);
-   
-   switch(specifier) 
-   {
-    case MOT1:
-    MOT1_BUS((unsigned char)va_arg(motorState,int));
-    break;
-    case MOT2:
-    MOT2_BUS((unsigned char)va_arg(motorState,int));
-    break;
-   }
- }
- //Changing the Direction two motors
- else if (num ==5 && modifier == DIREC) 
- {
-    specifier = (unsigned char)va_arg(motorState,int);
-    switch(specifier) 
-    {
-      case MOT1:
-      MOT1_BUS((unsigned char)va_arg(motorState,int));
-      break;
-      case MOT2:
-      MOT2_BUS((unsigned char)va_arg(motorState,int));
-      break;
-    }
-    
-    specifier = (unsigned char)va_arg(motorState,int);
-    switch(specifier) 
-    {
-      case MOT1:
-      MOT1_BUS((unsigned char)va_arg(motorState,int));
-      break;
-      case MOT2:
-      MOT2_BUS((unsigned char)va_arg(motorState,int));
-      break;
-    }
- } 
- else 
- {
-    va_end(motorState);
-    return ERROR;
- }
- return 1;
-}*/
-  
