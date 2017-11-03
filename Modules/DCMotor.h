@@ -110,6 +110,7 @@
 //Motor modifier flag
 #define MOT1  0U
 #define MOT2  1U
+#define MOT12 2U
 
 void initDCMotor(void);
 void disableChannel(unsigned char channel);

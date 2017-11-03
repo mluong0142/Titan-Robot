@@ -2,7 +2,10 @@
 #include <mc9s12c32.h>
 #include <stdarg.h>
 
-
+/********************initDCMotor()*******************************************
+Purpose:Initialize the DC Motors
+Input:None
+**************************************************************************/ 
 void initDCMotor() 
 {
   
@@ -30,19 +33,28 @@ void initDCMotor()
   
    
 }
-
+/********************enableChannel()*******************************************
+Purpose:Enables the PWM Channel
+Input: char value - PWM bit mask value
+**************************************************************************/ 
 void enableChannel(unsigned char channel) 
 {
    SET_BITS(PWME,channel);
 }
+/********************disableChannel()*******************************************
+Purpose:Disables the PWM Channel
+Input: char value - PWM bit mask value
+**************************************************************************/ 
 
 void disableChannel(unsigned char channel) 
 {
   CLR_BITS(PWME,channel);
 }
 
-
-
+/********************setMotor()*******************************************
+Purpose:Set the motor speed and direction
+Input: char value - motor speed ie:0-100%,direction:bit pattern,motor:0-3U
+**************************************************************************/ 
 //Note: Motor doesnt turn until speed value of 55 
 void setMotor(unsigned char speed, unsigned char direction, unsigned char motor) 
 {
@@ -60,6 +72,14 @@ void setMotor(unsigned char speed, unsigned char direction, unsigned char motor)
     MOT2_BUS(direction);
     PWMDTY5 = pwm;
     break;
+    
+    case MOT12:
+    MOT1_BUS(direction);
+    PWMDTY4 = pwm;
+    PWMDTY5 = pwm;
+    break;
+    
+    
  }
 }
 
@@ -69,8 +89,12 @@ void setMoterAlternate(unsigned directionM1,unsigned directionM2)
   MOT1_BUS(directionM1);
   MOT2_BUS(directionM2);
 }
-  
 
+
+/********************setSpeed()************************
+Purpose:Set the motor speed of each motor
+Input: char value - motor speed ie:0-100%
+****************************************************/ 
 
 void setSpeed(unsigned char speed,unsigned char motor) 
 {
@@ -85,7 +109,13 @@ void setSpeed(unsigned char speed,unsigned char motor)
     case MOT2:
     PWMDTY5 = pwm;
     break;
-  } 
+    
+    case MOT12:
+    PWMDTY4 = pwm;
+    PWMDTY5 = pwm;
+    break;
+  }
+  
 }
 
 /***************Old functions**********************
