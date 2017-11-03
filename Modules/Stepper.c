@@ -20,7 +20,7 @@ Input:None
 void initRTI(void) 
 {
  
-  direction = RIGHT;
+  direction = STRIGHT;
   
   DDRA_SWR_INIT;
   SET_SWR_INPUT_EN;//Extra intialization because of PORTA
@@ -75,14 +75,14 @@ Input:None
 void seekSwitch(void) 
 {
     
-    if (direction == LEFT )
+    if (direction == STLEFT )
     {
       switchStatus =  CHECK_LEFT_SWITCH_ON;
       MaxStep++;
       //Case for the left limit is triggered
       if (switchStatus ==  L_SWR_ON_MASK) 
       { 
-        direction= RIGHT;
+        direction= STRIGHT;
         mode = HOME;
         //CLR_BITS(CRGINT,CRGINT_RTIE_MASK);//Disable Interrupt
       } 
@@ -94,14 +94,14 @@ void seekSwitch(void)
       }
          
     } 
-    else if (direction == RIGHT) 
+    else if (direction == STRIGHT) 
     {
        switchStatus =  CHECK_RIGHT_SWITCH_ON;
        
        //Case for the right limit is triggered
        if(switchStatus == R_SWR_ON_MASK) 
        {
-          direction = LEFT;
+          direction = STLEFT;
           index--;
           index&=STEPPER_MOD_7;
           MaxStep++;
@@ -162,18 +162,18 @@ static void continuous (void)
       calcFlag = TRUE;
       if ( MaxStep > 0)  
       {
-        direction = RIGHT;
+        direction = STRIGHT;
         MaxStep = MaxStep/stepType;
       } 
       else if (MaxStep < 0) 
       {
-         direction = LEFT;
+         direction = STLEFT;
          MaxStep = abs(MaxStep)/stepType;
       }
    }
    
    
-   if (direction == RIGHT && 0!= MaxStep) 
+   if (direction == STRIGHT && 0!= MaxStep) 
    {
     
      index+=stepType;
@@ -181,7 +181,7 @@ static void continuous (void)
      numStep-=stepType;
      index &=STEPPER_MOD_7; 
    } 
-   else if (direction == LEFT && 0!= MaxStep) 
+   else if (direction == STLEFT && 0!= MaxStep) 
    {
       index -=stepType;
       MaxStep--;
@@ -209,17 +209,17 @@ static void relative(void)
       calcFlag = TRUE;
       if ( MaxStep > 0)  
       {
-        direction = LEFT;
+        direction = STLEFT;
         MaxStep = MaxStep/stepType;
       } 
       else if (MaxStep < 0) 
       {
-         direction = RIGHT;
+         direction = STRIGHT;
          MaxStep = abs(MaxStep)/stepType;
       }
    }
    
-   if (direction == RIGHT && 0!= MaxStep) 
+   if (direction == STRIGHT && 0!= MaxStep) 
    {
      
      index+=stepType;
@@ -228,7 +228,7 @@ static void relative(void)
      index &=STEPPER_MOD_7; 
       
    } 
-   else if (direction == LEFT && 0!= MaxStep) 
+   else if (direction == STLEFT && 0!= MaxStep) 
    {
       
       index -=stepType;
@@ -269,7 +269,7 @@ interrupt 7 void RTIhandler( void )
     case HOME:
     home();
     break;
-    case FIXED:
+    case STPFIXED:
     continuous();
     break;
     case RELAT:

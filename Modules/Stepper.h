@@ -25,13 +25,13 @@ Version:00
 #define SEEK     0U
 #define HOME     1U
 #define RELAT    2U
-#define FIXED    3U
+#define STPFIXED 3U
 #define READY    4U
 
 
 //Stepper Direction
-#define LEFT  0U
-#define RIGHT 1U
+#define STLEFT  0U
+#define STRIGHT 1U
 
 //Stepper Step Type
 #define HALF 1U

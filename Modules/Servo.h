@@ -12,8 +12,8 @@ Version:00
 
 
 #define _20MS 20000U
-#define RIGHT 0U
-#define LEFT 1U
+#define SVRIGHT 0U
+#define SVLEFT 1U
 #define IDLE 0U
 #define DELAY 1U
 #define FIXED  2U

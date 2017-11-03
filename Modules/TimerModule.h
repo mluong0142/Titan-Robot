@@ -36,7 +36,7 @@
 // Valid action values for the output capture
 #define OC_OFF    0x00
 #define OC_TOGGLE 0x01
-#define OC_GO_LO  0x02
+#define OC_GO_LOW  0x02
 #define OC_GO_HI  0x03
 
 
@@ -73,6 +73,10 @@
 #define TCNT_PRESCALE_32      0x05
 #define TCNT_PRESCALE_64      0x06
 #define TCNT_PRESCALE_128     0x07
+
+//Pulse Width State
+#define LOWSTATE 0U
+#define HIGHSTATE 1U
 
 // Init value for TSCR1 to enable timer, freeze the timer while debugging, and use the fast-clear function
 #define TSCR1_INIT            (TSCR1_TEN_MASK | TSCR1_TFFCA_MASK| TSCR1_TSFRZ_MASK)

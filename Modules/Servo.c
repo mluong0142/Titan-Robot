@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "Servo.h"
-#include "Timer.h"
+#include "TimerModule.h"
 
 
 static unsigned char mode;
@@ -95,11 +95,11 @@ static int sweepServo(void)
     newPosition = calculatePulse();
     if( newPosition > currentPosition) 
     {
-      direction = RIGHT;
+      direction = SVRIGHT;
     } 
     else if (newPosition < currentPosition) 
     {
-     direction = LEFT;
+     direction = SVLEFT;
     } 
     else 
     {
@@ -118,7 +118,7 @@ static int sweepServo(void)
   {
     
   
-    if (direction == RIGHT) 
+    if (direction == SVRIGHT) 
     {
       if((currentPosition + distance) <= newPosition)//Need to travel more 
       {                                                                                                                                                       
@@ -137,7 +137,7 @@ static int sweepServo(void)
     
       
     } 
-    else if (direction == LEFT) 
+    else if (direction == SVLEFT) 
     {
       if((currentPosition - distance)>= newPosition)//Need to travel more 
       {
