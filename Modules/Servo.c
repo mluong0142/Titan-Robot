@@ -3,29 +3,35 @@
 #include "Servo.h"
 #include "Timer.h"
 
-unsigned int currentPosition;
-unsigned char mode;
-unsigned long msDelay;
-unsigned char degree;
 
+static unsigned char mode;
+static unsigned long msDelay;
+static unsigned char degree;
+static unsigned int currentPosition;
 
 unsigned char PrevState = LOWSTATE;
+
+/********************servoInit()*******************************************
+Purpose:Initialize the servo
+Input:None
+**************************************************************************/ 
 void servoInit(void) 
 {
   currentPosition = 600U;
   TSCR1=TSCR1_INIT;// enable TCNT, fast timer flag clear, freeze duting debbugging
   SET_TCNT_PRESCALE(TCNT_PRESCALE_8);// set prescale to 8
   MAKE_CHNL_OC(2);//Config channel 0
-  SET_OC_ACTION(2,OC_GO_HI);
-  TIMER_CHNL(2) = TCNT + (_20MS - currentPosition);
+  SET_OC_ACTION(2,OC_GO_HI);//Set the state of pin to change when the intterupt goes off
+  TIMER_CHNL(2) = TCNT + (_20MS - currentPosition);//Set the intterrupt to go off in the future
   ENABLE_CHNL_INTERRUPT(2);//enable TC0 channel interrupts
   mode = IDLE;
-}                                
+}
 
-
-
-
-interrupt VectorNumber_Vtimch2 void TimerCh1Handler(void) 
+/********************TimerCh2Handler()*************************************
+Purpose:Moves the servo depending on the mode selected 
+Input:None
+**************************************************************************/                                 
+interrupt 10U void TimerCh2Handler(void) 
 {
   
   
@@ -58,6 +64,10 @@ interrupt VectorNumber_Vtimch2 void TimerCh1Handler(void)
   }
 }
 
+/********************calculatePulse()*************************************
+Purpose:Calculates the pulse width for given degree
+Input:None
+**************************************************************************/ 
 static unsigned int calculatePulse(void)
 {
   static unsigned int result;
@@ -66,7 +76,10 @@ static unsigned int calculatePulse(void)
 }
 
 
-
+/********************sweepServo()*************************************
+Purpose:Moves the servo to specific a location with a delay
+Input:None
+**************************************************************************/
 static int sweepServo(void) 
 {
   static unsigned char calcFlag = FALSE;
@@ -144,72 +157,36 @@ static int sweepServo(void)
     }
   }
 }
-
+/********************fixedServo()*************************************
+Purpose:Moves the servo to specific a location no delay
+Input:None
+**************************************************************************/
 static void fixedServo(void) 
 {
   currentPosition = calculatePulse();
   mode = IDLE;
 }
-
-void setModeServoV(unsigned char tMode, unsigned char tDegree, unsigned long tDelay) 
+/********************setModeServoV()*************************************
+Purpose:Set the mode which the servo responds too
+Input:unsigned char- mode:1-2U,tDegree:0-202U,tDelay:20MS>
+**************************************************************************/
+void setModeServo(unsigned char tMode, unsigned char tDegree, unsigned long tDelay) 
 {
  
- if(tMode == FIXED) 
- {
-  mode = tMode;
-  degree =tDegree;
- } 
- else 
- {
-   mode = tMode;
-   degree =tDegree;
-   msDelay = tDelay;
+  if(tMode == FIXED) 
+  {
+    mode = tMode;
+    degree =tDegree;
+  } 
+  else 
+  {
+    mode = tMode;
+    degree =tDegree;
+    msDelay = tDelay;
   
   }
 }
-  
-//Not working as intended need to investigate
-//va_args takes its arguments from the back for longs datatypes??
 
-void setModeServo(unsigned long arg,...) 
-{
-  va_list modeList;
-  va_start (modeList,arg);
-  
-  if (arg == 2) 
-  {
-    degree = (unsigned char)va_arg(modeList,unsigned long);
-    mode = (unsigned char)va_arg(modeList,unsigned long);
-  } 
-  else if (arg == 3) 
-  {
-    msDelay = va_arg(modeList,unsigned long);
-    degree = (unsigned char)va_arg(modeList,unsigned long);
-    mode = (unsigned char)va_arg(modeList,unsigned long);
-    
-    
-  }
-  va_end(modeList);//Dead comment?????
-}
-
-/*void setModeServo(unsigned int arg,...) 
-{
-  va_list modeList;
-  va_start (modeList,arg);
-  
-  if (arg == 2) 
-  {
-    mode = (unsigned char)va_arg(modeList,unsigned int);
-    degree = (unsigned char)va_arg(modeList,unsigned int);
-  } 
-  else if (arg == 3) 
-  {
-    mode = (unsigned char)va_arg(modeList,unsigned int);
-    degree = (unsigned char)va_arg(modeList,unsigned int);
-    msDelay = va_arg(modeList,unsigned int);
-  }
-  va_end(modeList);//Dead comment?????
-}*/
     
     
   

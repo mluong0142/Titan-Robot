@@ -23,8 +23,6 @@ void servoInit(void);
 static unsigned int calculatePulse(void);
 static int sweepServo(void);
 static void fixedServo(void);
-//void setModeServo(unsigned long arg,...);
-//void setModeServo(unsigned int arg,...) ;
-void setModeServoV(unsigned char tMode, unsigned char tDegree, unsigned long tDelay);
+void setModeServo(unsigned char tMode, unsigned char tDegree, unsigned long tDelay);
 
 #endif
