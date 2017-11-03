@@ -48,10 +48,10 @@ Version:00
 
 void seekSwitch(void);
 void initRTI(void);
-void home(void);
-void continuous (int userPosition);
+static void home(void);
+static void continuous (void);
+static void relative(void);
 int calculatePosition(int angle);
-void relative(int userPosition);
 int setMode(int num,...);
 void initStepper(void);
 unsigned int Status(void);

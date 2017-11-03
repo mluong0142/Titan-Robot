@@ -1,27 +1,22 @@
 #include <stdio.h>
 #include <stdlib.h>
-
-
 #include "Stepper.h"
 
-unsigned char stepPattern [] = { 0x80,0xA0,0x20,0x60,0x40,0x50,0x10,0x90};
+unsigned char const stepPattern [] = { 0x80,0xA0,0x20,0x60,0x40,0x50,0x10,0x90};
 
-unsigned char stepType;
-unsigned char mode;
+static unsigned char stepType;
+static unsigned char mode;
 int MaxStep= 0;
 int numStep = 0;
-int position;
+unsigned int position;
 unsigned char index = 0;
-
-
-
-
-
 volatile unsigned char switchStatus;
 volatile unsigned char direction;
 
-
-
+/********************initRTI()*******************************************
+Purpose:Initialize the Real Time interrupt
+Input:None
+**************************************************************************/ 
 void initRTI(void) 
 {
  
@@ -34,24 +29,27 @@ void initRTI(void)
   CRGFLG = CRGFLG_RTIF_MASK;    // clear any possibly pending RTI interrupts
 }
 
-
+/********************setMode()*******************************************
+Purpose:Initialize the Real Time interrupt
+Input:variable arg int:(3,RELAT,HALF,80),(3,RELAT,HALF,80)
+**************************************************************************/ 
 int setMode(int num,...)
 {
    va_list modeList;
    va_start (modeList,num);
    
-   if (num == 1)
+   if (num == 1)//set mode
    {
        mode = (unsigned char)va_arg(modeList,int);
        
    } 
-   else if (num == 2) 
+   else if (num == 2)//set mode and position 
    {
       mode =(unsigned char) va_arg(modeList,int);
       position = va_arg(modeList,int);
       
    }
-   else if (num == 3) 
+   else if (num == 3)//set mode, step type, position 
    {
       mode = (unsigned char) va_arg(modeList,int);
       stepType = (unsigned char)va_arg(modeList,int);
@@ -68,8 +66,12 @@ int setMode(int num,...)
    va_end(modeList);
    CRGINT |= CRGINT_RTIE_MASK; 
    return 1;
- } 
-
+ }
+  
+/********************seekSwitch()*******************************************
+Purpose:Initialize the stepper motor so it know where the limits are
+Input:None
+**************************************************************************/ 
 void seekSwitch(void) 
 {
     
@@ -115,9 +117,11 @@ void seekSwitch(void)
     
     STEPPER_BUS(stepPattern[index]);
 }
-
-
-void home(void) 
+/********************home()**********************************************
+Purpose:Move the stepper motor to middle point
+Input:None
+**************************************************************************/ 
+static void home(void) 
 {
    
    if(numStep == MaxStep/2) 
@@ -134,21 +138,27 @@ void home(void)
    }
    
 }
-
+/********************calculatePosition()***********************************
+Purpose:Calculate the stepper motor position given an angle input
+Input:None
+**************************************************************************/ 
 int calculatePosition(int angle) 
 {
   static int calcPosition;
   calcPosition = (int)( ( (21444L)*(angle) + 10000L )/10000L);
   return calcPosition;
 }
-
-void continuous (int userPosition) 
+/********************continuous()*****************************************
+Purpose:Move the stepper motor to fixed an angle
+Input:None
+**************************************************************************/ 
+static void continuous (void) 
 {
    static unsigned char calcFlag = FALSE;
    
    if (calcFlag != TRUE) 
    {
-      MaxStep = numStep - (calculatePosition (userPosition));
+      MaxStep = numStep - (calculatePosition (position));
       calcFlag = TRUE;
       if ( MaxStep > 0)  
       {
@@ -185,14 +195,17 @@ void continuous (int userPosition)
    }
    STEPPER_BUS(stepPattern[index]);
 }
- 
-void relative(int userPosition) 
+/********************relative()*****************************************
+Purpose:Move the stepper motor to a relative angle given the current position
+Input:None
+**************************************************************************/ 
+static void relative(void) 
 { 
    static unsigned char calcFlag = FALSE;
    
    if (calcFlag != TRUE) 
    {
-      MaxStep =  (calculatePosition (userPosition));
+      MaxStep =  (calculatePosition (position));
       calcFlag = TRUE;
       if ( MaxStep > 0)  
       {
@@ -230,15 +243,20 @@ void relative(int userPosition)
    }
    STEPPER_BUS(stepPattern[index]);
 }
- 
- 
+
+/********************initStepper()*****************************************
+Purpose:Initialize Stepper motor
+Input:None
+**************************************************************************/  
 void initStepper(void) 
 {
   while(mode == SEEK || mode == HOME);
 }
 
-
-  
+/********************RTIhandler()*****************************************
+Purpose:moves the stepper motor depending on the mode 
+Input:None
+**************************************************************************/
 interrupt 7 void RTIhandler( void )
 {
    
@@ -252,19 +270,25 @@ interrupt 7 void RTIhandler( void )
     home();
     break;
     case FIXED:
-    continuous(position);
+    continuous();
     break;
     case RELAT:
-    relative(position);
+    relative();
     break;
    }
 }
-
+/********************Status()*****************************************
+Purpose:returns the mode of stepper motor 
+Input:None
+**************************************************************************/
 unsigned int Status(void)
 {
   return mode;
 }
-
+/********************speed()*****************************************
+Purpose:set the speed of stepper motor 
+Input:None
+**************************************************************************/
 void speed(unsigned char speed) 
 {
   RTICTL = speed;// set RTI period
