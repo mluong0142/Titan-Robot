@@ -84,7 +84,7 @@ void setMotor(unsigned char speed, unsigned char direction, unsigned char motor)
 }
 
 
-void setMoterAlternate(unsigned directionM1,unsigned directionM2) 
+void setMotorAlternate(unsigned directionM1,unsigned directionM2) 
 {
   MOT1_BUS(directionM1);
   MOT2_BUS(directionM2);

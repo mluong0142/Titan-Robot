@@ -116,7 +116,7 @@ void initDCMotor(void);
 void disableChannel(unsigned char channel);
 void enableChannel(unsigned char channel);
 void setMotor(unsigned char speed, unsigned char direction, unsigned char motor);
-void setMoterAlternate(unsigned directionM1,unsigned directionM2);
+void setMotorAlternate(unsigned directionM1,unsigned directionM2);
 
 
 // Test case functions
