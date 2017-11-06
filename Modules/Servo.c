@@ -31,7 +31,7 @@ void servoInit(void)
 Purpose:Moves the servo depending on the mode selected 
 Input:None
 **************************************************************************/                                 
-interrupt VectorNumber_Vtimch1 void TimerCh2Handler(void) 
+interrupt VectorNumber_Vtimch1 void TimerCh1Handler(void) 
 {
   
   
