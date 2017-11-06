@@ -257,7 +257,7 @@ void initStepper(void)
 Purpose:moves the stepper motor depending on the mode 
 Input:None
 **************************************************************************/
-interrupt 7 void RTIhandler( void )
+interrupt VectorNumber_Vrti void RTIhandler( void )
 {
    
    CRGFLG = CRGFLG_RTIF_MASK;

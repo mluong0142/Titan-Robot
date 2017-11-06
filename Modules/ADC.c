@@ -71,7 +71,7 @@ int readChannel(unsigned char channel)
 Purpose:Read ATD value once ready to read
 Input:None
 ********************************************************************************/ 
-interrupt 22 void ATDhandler (void) 
+interrupt VectorNumber_Vatd0 void ATDhandler (void) 
 {
    atdValue1 = ATDDR0;
    atdValue2 = ATDDR1;
