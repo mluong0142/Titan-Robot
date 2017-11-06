@@ -14,9 +14,7 @@
 void main(void) {
   /* put your own code here */
   
-
-
-	EnableInterrupts;
+ 
 
 
   for(;;) {
