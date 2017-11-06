@@ -9,7 +9,7 @@ static unsigned long msDelay;
 static unsigned char degree;
 static unsigned int currentPosition;
 
-unsigned char PrevState = LOWSTATE;
+static unsigned char PrevState = LOWSTATE;
 
 /********************servoInit()*******************************************
 Purpose:Initialize the servo
@@ -20,10 +20,10 @@ void servoInit(void)
   currentPosition = 600U;
   TSCR1=TSCR1_INIT;// enable TCNT, fast timer flag clear, freeze duting debbugging
   SET_TCNT_PRESCALE(TCNT_PRESCALE_8);// set prescale to 8
-  MAKE_CHNL_OC(2);//Config channel 0
-  SET_OC_ACTION(2,OC_GO_HI);//Set the state of pin to change when the intterupt goes off
-  TIMER_CHNL(2) = TCNT + (_20MS - currentPosition);//Set the intterrupt to go off in the future
-  ENABLE_CHNL_INTERRUPT(2);//enable TC0 channel interrupts
+  MAKE_CHNL_OC(1);//Config channel 1
+  SET_OC_ACTION(1,OC_GO_HI);//Set the state of pin to change when the intterupt goes off
+  TIMER_CHNL(1) = TCNT + (_20MS - currentPosition);//Set the intterrupt to go off in the future
+  ENABLE_CHNL_INTERRUPT(1);//enable TC0 channel interrupts
   mode = IDLE;
 }
 
@@ -31,7 +31,7 @@ void servoInit(void)
 Purpose:Moves the servo depending on the mode selected 
 Input:None
 **************************************************************************/                                 
-interrupt 10U void TimerCh2Handler(void) 
+interrupt VectorNumber_Vtimch1 void TimerCh2Handler(void) 
 {
   
   
@@ -50,15 +50,15 @@ interrupt 10U void TimerCh2Handler(void)
   switch(PrevState) 
   {
     case HIGHSTATE:
-    TIMER_CHNL(2) += _20MS - currentPosition;//Duration of the low state
-    SET_OC_ACTION(2,OC_GO_HI);
+    TIMER_CHNL(1) += _20MS - currentPosition;//Duration of the low state
+    SET_OC_ACTION(1,OC_GO_HI);
     PrevState = LOWSTATE;
     break;
     
     
     case LOWSTATE:
-    TIMER_CHNL(2) += currentPosition;//Duration of the high state
-    SET_OC_ACTION( 2, OC_GO_LOW);
+    TIMER_CHNL(1) += currentPosition;//Duration of the high state
+    SET_OC_ACTION(1, OC_GO_LOW);
     PrevState = HIGHSTATE;
     break;
   }
