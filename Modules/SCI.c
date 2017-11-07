@@ -72,7 +72,7 @@ interrupt VectorNumber_Vsci void SCIHandler( void )
 Purpose: gets a character from the Serial Port
 nput:   char cx - character read from the port
 ******************************************************************************/
-void getSCI(char cx) 
+void getcSCI(char cx) 
 {
   if(cx == '>') 
   {
