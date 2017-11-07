@@ -4,6 +4,8 @@
 
 volatile char rxBuffer[rxBufSize];
 volatile unsigned char rxIndex = 0;
+unsigned char msgCount = 0;
+static unsigned StartFlag = 0;
 
 /*************InitSCI()*******************************************************
 Purpose: Initalize the SCI module
@@ -42,12 +44,13 @@ void putsSCI(char *str)
 Purpose: gets a character from the Serial Port
 nput:   char cx - character read from the port
 ******************************************************************************/
+/*
 void getcSCI(char cx) 
 {
   rxBuffer[rxIndex] = cx;
   rxIndex++; 
   rxIndex %= rxBufSize;// Ring buffer that trashes old data  
-}
+}*/
   
 /************SCIHandler()*****************************************************
 Purpose: Grab a character from the serial port on every interupt
@@ -65,6 +68,28 @@ interrupt VectorNumber_Vsci void SCIHandler( void )
   }
 }
 
-
+/************getcSCI()*********************************************************
+Purpose: gets a character from the Serial Port
+nput:   char cx - character read from the port
+******************************************************************************/
+void getSCI(char cx) 
+{
+  if(cx == '>') 
+  {
+    msgCount++;
+    StartFlag=STOP;
+  }
   
+  if (cx == '<') 
+  {
+    StartFlag = START;
+  }
+  
+  if (StartFlag == START) 
+  {
+    rxBuffer[rxIndex]= cx;
+    rxIndex++;
+    rxIndex %= rxBufSize;
+  }
+}
   
