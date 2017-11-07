@@ -9,7 +9,10 @@ Version:00
 #define _UTILS_H
 
 #include <mc9s12c32.h>
-#include <hidef.h> 
+#include <hidef.h>
+
+#define START 1
+#define STOP 0 
 
 // Macro to grab only the lower byte of an argument
 #define LOW( value )    ((value) & 0xFF)
