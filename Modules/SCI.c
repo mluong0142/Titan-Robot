@@ -1,11 +1,14 @@
 #include "SCI.h"
 #include <mc9s12c32.h>
+#include <string.h>
 
 
 volatile char rxBuffer[rxBufSize];
 volatile unsigned char rxIndex = 0;
 unsigned char msgCount = 0;
 static unsigned StartFlag = 0;
+
+char stringS []="1111111111";
 
 /*************InitSCI()*******************************************************
 Purpose: Initalize the SCI module
@@ -78,18 +81,31 @@ void getcSCI(char cx)
   {
     msgCount++;
     StartFlag=STOP;
-  }
-  
-  if (cx == '<') 
+  } 
+  else if (cx == '<') 
   {
     StartFlag = START;
-  }
-  
-  if (StartFlag == START) 
+    
+  } 
+  else if (StartFlag == START) 
   {
     rxBuffer[rxIndex]= cx;
     rxIndex++;
     rxIndex %= rxBufSize;
   }
 }
-  
+
+
+/************get_cmdbuf()*********************************************************
+Purpose:parses out the commands
+input:   char argv1,argv2:These store the individual commands
+******************************************************************************/
+void get_cmdbuf(char argv1[],char argv2[],char *arg3)
+{
+  DisableInterrupts;
+  (void)strncpy(&argv1[0],&rxBuffer[0],3);
+  (void)strncpy(&argv2[0],&rxBuffer[3],3);
+   *(arg3) =*(stringS+5);
+  EnableInterrupts;
+}
+ 

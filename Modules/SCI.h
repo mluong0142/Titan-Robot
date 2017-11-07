@@ -22,6 +22,7 @@ void InitSCI(unsigned int baudRate,unsigned char SCIData,unsigned char config);
 void putcSCI(char cx);
 void putsSCI(char *str);
 void getcSCI(char cx);
+void get_cmdbuf(char argv1[],char argv2[],char *arg3);
 
 #endif
  
