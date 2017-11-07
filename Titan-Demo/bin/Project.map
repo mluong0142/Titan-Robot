@@ -18,6 +18,7 @@ Start12.c.o                             Model: SMALL,         Lang: ANSI-C,     
 STDLIB.C.o (ansisi.lib)                 Model: SMALL,         Lang: ANSI-C,        Compiler Version: ANSI-C/cC++ Compiler for HC12 V-5.0.46 Build 15249, Sep  7 2015
 rtshc12.c.o (ansisi.lib)                Model: SMALL,         Lang: ANSI-C,        Compiler Version: ANSI-C/cC++ Compiler for HC12 V-5.0.46 Build 15249, Sep  7 2015
 ADC.c.o                                 Model: SMALL,         Lang: ANSI-C,        Compiler Version: ANSI-C/cC++ Compiler for HC12 V-5.0.46 Build 15249, Sep  7 2015
+DCMotor.c.o                             Model: SMALL,         Lang: ANSI-C,        Compiler Version: ANSI-C/cC++ Compiler for HC12 V-5.0.46 Build 15249, Sep  7 2015
 SCI.c.o                                 Model: SMALL,         Lang: ANSI-C,        Compiler Version: ANSI-C/cC++ Compiler for HC12 V-5.0.46 Build 15249, Sep  7 2015
 Servo.c.o                               Model: SMALL,         Lang: ANSI-C,        Compiler Version: ANSI-C/cC++ Compiler for HC12 V-5.0.46 Build 15249, Sep  7 2015
 Stepper.c.o                             Model: SMALL,         Lang: ANSI-C,        Compiler Version: ANSI-C/cC++ Compiler for HC12 V-5.0.46 Build 15249, Sep  7 2015
@@ -29,8 +30,8 @@ Entry point: 0xC029 (_Startup)
 _startupData is allocated at 0xC031 and uses 6 Bytes
 extern struct _tagStartup {
   unsigned nofZeroOut     1
-  _Range   pZeroOut       0x900     58
-  _Copy    *toCopyDownBeg 0xC58D
+  _Range   pZeroOut       0x900     66
+  _Copy    *toCopyDownBeg 0xC69F
 } _startupData;
 
 *********************************************************************************************
@@ -40,9 +41,10 @@ Section Name                    Size  Type     From       To       Segment
 .init                             49     R     0xC000     0xC030   ROM_C000
 .startData                        10     R     0xC031     0xC03A   ROM_C000
 .rodata                            8     R     0xC03B     0xC042   ROM_C000
-.text                            993     R     0xC043     0xC423   ROM_C000
-.copy                              2     R     0xC58D     0xC58E   ROM_C000
+.text                           1267     R     0xC043     0xC535   ROM_C000
+.copy                              7     R     0xC69F     0xC6A5   ROM_C000
 .stack                           256   R/W      0x800      0x8FF   RAM
+.data                              1   R/W      0x900      0x900   RAM
 .abs_section_8                     1   N/I        0x8        0x8   .absSeg0
 .abs_section_9                     1   N/I        0x9        0x9   .absSeg1
 .abs_section_a                     1   N/I        0xA        0xA   .absSeg2
@@ -265,17 +267,20 @@ Section Name                    Size  Type     From       To       Segment
 .abs_section_16e                   2   N/I      0x16E      0x16F   .absSeg219
 .abs_section_17e                   2   N/I      0x17E      0x17F   .absSeg220
 .abs_section_ffd2                  2     R     0xFFD2     0xFFD3   .absSeg221
-.abs_section_ffd6                  2     R     0xFFD6     0xFFD7   .absSeg222
-.abs_section_ffec                  2     R     0xFFEC     0xFFED   .absSeg223
-.abs_section_fff0                  2     R     0xFFF0     0xFFF1   .absSeg224
-.bss                              34   R/W      0x900      0x921   RAM
-RUNTIME                          361     R     0xC424     0xC58C   ROM_C000
-.common                           24   R/W      0x922      0x939   RAM
-.vectSeg225_vect                   2     R     0xFFFE     0xFFFF   .vectSeg225
+.abs_section_ffea                  2     R     0xFFEA     0xFFEB   .absSeg222
+.abs_section_ffe8                  2     R     0xFFE8     0xFFE9   .absSeg223
+.abs_section_ffde                  2     R     0xFFDE     0xFFDF   .absSeg224
+.abs_section_ffd6                  2     R     0xFFD6     0xFFD7   .absSeg225
+.abs_section_ffec                  2     R     0xFFEC     0xFFED   .absSeg226
+.abs_section_fff0                  2     R     0xFFF0     0xFFF1   .absSeg227
+.bss                              41   R/W      0x901      0x929   RAM
+RUNTIME                          361     R     0xC536     0xC69E   ROM_C000
+.common                           24   R/W      0x92A      0x941   RAM
+.vectSeg228_vect                   2     R     0xFFFE     0xFFFF   .vectSeg228
 
 Summary of section sizes per section type:
-READ_ONLY (R):         599 (dec:     1433)
-READ_WRITE (R/W):      13A (dec:      314)
+READ_ONLY (R):         6B6 (dec:     1718)
+READ_WRITE (R/W):      142 (dec:      322)
 NO_INIT (N/I):         104 (dec:      260)
 
 *********************************************************************************************
@@ -326,7 +331,7 @@ MODULE:                 -- mc9s12c32.c.o --
      _RTICTL                                     3B       1       1       0   .abs_section_3b
      _COPCTL                                     3C       1       1       0   .abs_section_3c
      _ARMCOP                                     3F       1       1       0   .abs_section_3f
-     _TIOS                                       40       1       1       0   .abs_section_40
+     _TIOS                                       40       1       1       2   .abs_section_40
      _CFORC                                      41       1       1       0   .abs_section_41
      _OC7M                                       42       1       1       0   .abs_section_42
      _OC7D                                       43       1       1       0   .abs_section_43
@@ -334,9 +339,9 @@ MODULE:                 -- mc9s12c32.c.o --
      _TTOV                                       47       1       1       0   .abs_section_47
      _TCTL1                                      48       1       1       4   .abs_section_48
      _TCTL2                                      49       1       1       0   .abs_section_49
-     _TCTL3                                      4A       1       1       0   .abs_section_4a
+     _TCTL3                                      4A       1       1       4   .abs_section_4a
      _TCTL4                                      4B       1       1       0   .abs_section_4b
-     _TIE                                        4C       1       1       0   .abs_section_4c
+     _TIE                                        4C       1       1       1   .abs_section_4c
      _TSCR2                                      4D       1       1       0   .abs_section_4d
      _TFLG1                                      4E       1       1       0   .abs_section_4e
      _TFLG2                                      4F       1       1       0   .abs_section_4f
@@ -358,12 +363,12 @@ MODULE:                 -- mc9s12c32.c.o --
      _SPIBR                                      DA       1       1       0   .abs_section_da
      _SPISR                                      DB       1       1       0   .abs_section_db
      _SPIDR                                      DD       1       1       0   .abs_section_dd
-     _PWME                                       E0       1       1       0   .abs_section_e0
-     _PWMPOL                                     E1       1       1       0   .abs_section_e1
-     _PWMCLK                                     E2       1       1       0   .abs_section_e2
-     _PWMPRCLK                                   E3       1       1       0   .abs_section_e3
-     _PWMCAE                                     E4       1       1       0   .abs_section_e4
-     _PWMCTL                                     E5       1       1       0   .abs_section_e5
+     _PWME                                       E0       1       1       2   .abs_section_e0
+     _PWMPOL                                     E1       1       1       2   .abs_section_e1
+     _PWMCLK                                     E2       1       1       2   .abs_section_e2
+     _PWMPRCLK                                   E3       1       1       1   .abs_section_e3
+     _PWMCAE                                     E4       1       1       2   .abs_section_e4
+     _PWMCTL                                     E5       1       1       1   .abs_section_e5
      _PWMSCLA                                    E8       1       1       0   .abs_section_e8
      _PWMSCLB                                    E9       1       1       0   .abs_section_e9
      _PWMSDN                                     FE       1       1       0   .abs_section_fe
@@ -473,8 +478,8 @@ MODULE:                 -- mc9s12c32.c.o --
      _RDRAD                                     273       1       1       0   .abs_section_273
      _PERAD                                     274       1       1       0   .abs_section_274
      _PPSAD                                     275       1       1       0   .abs_section_275
-     _PORTAB                                      0       2       2       0   .abs_section_0
-     _DDRAB                                       2       2       2       0   .abs_section_2
+     _PORTAB                                      0       2       2       4   .abs_section_0
+     _DDRAB                                       2       2       2       1   .abs_section_2
      _PARTID                                     1A       2       2       0   .abs_section_1a
      _DBGTB                                      22       2       2       0   .abs_section_22
      _DBGCC                                      26       2       2       0   .abs_section_26
@@ -506,16 +511,17 @@ MODULE:                 -- mc9s12c32.c.o --
      _PWMCNT45                                   F0       2       2       0   .abs_section_f0
      _PWMPER01                                   F2       2       2       0   .abs_section_f2
      _PWMPER23                                   F4       2       2       0   .abs_section_f4
-     _PWMPER45                                   F6       2       2       0   .abs_section_f6
+     _PWMPER45                                   F6       2       2       2   .abs_section_f6
      _PWMDTY01                                   F8       2       2       0   .abs_section_f8
      _PWMDTY23                                   FA       2       2       0   .abs_section_fa
-     _PWMDTY45                                   FC       2       2       0   .abs_section_fc
+     _PWMDTY45                                   FC       2       2       7   .abs_section_fc
      _CANRXTSR                                  16E       2       2       0   .abs_section_16e
      _CANTXTSR                                  17E       2       2       0   .abs_section_17e
 MODULE:                 -- main.c.o --
 - PROCEDURES:
-     main                                      C043       9       9       1   .text       
+     main                                      C043      20      32       1   .text       
 - VARIABLES:
+     motorSpeed                                 900       1       1       1   .data       
 MODULE:                 -- Start12.c.o --
 - PROCEDURES:
      Init                                      C000      29      41       1   .init       
@@ -526,104 +532,128 @@ MODULE:                 -- Start12.c.o --
      __SEG_END_SSTACK                           900       0       0       1               
 MODULE:                 -- STDLIB.C.o (ansisi.lib) --
 - PROCEDURES:
-     abs                                       C04C       A      10       4   .text       
+     abs                                       C063       A      10       4   .text       
 - VARIABLES:
 MODULE:                 -- rtshc12.c.o (ansisi.lib) --
 - PROCEDURES:
-     _BDIVMODU                                 C424       A      10       1   RUNTIME     
-     _LNEG                                     C42E       D      13       1   RUNTIME     
-     _LMULU16x32                               C43B       F      15       1   RUNTIME     
-     _LMULS16x32                               C44A      1F      31       1   RUNTIME     
-     _lDivMod                                  C469      BE     190       3   RUNTIME     
-     _LDIVU                                    C527       E      14       2   RUNTIME     
-     _NEG_P                                    C535       F      15       4   RUNTIME     
-     _LDIVS                                    C544      35      53       2   RUNTIME     
-     _CASE_CHECKED_BYTE                        C579      14      20       1   RUNTIME     
+     _BDIVMODU                                 C536       A      10       1   RUNTIME     
+     _LNEG                                     C540       D      13       1   RUNTIME     
+     _LMULU16x32                               C54D       F      15       1   RUNTIME     
+     _LMULS16x32                               C55C      1F      31       1   RUNTIME     
+     _lDivMod                                  C57B      BE     190       3   RUNTIME     
+     _LDIVU                                    C639       E      14       2   RUNTIME     
+     _NEG_P                                    C647       F      15       4   RUNTIME     
+     _LDIVS                                    C656      35      53       2   RUNTIME     
+     _CASE_CHECKED_BYTE                        C68B      14      20       3   RUNTIME     
 - VARIABLES:
 MODULE:                 -- ADC.c.o --
 - PROCEDURES:
-     ATDhandler                                C056       E      14       1   .text       
+     ATDhandler                                C06D       E      14       1   .text       
 - VARIABLES:
      _Vector_22                                FFD2       2       2       0   .abs_section_ffd2
-     atdValue1                                  922       2       2       1   .common     
-     atdValue2                                  924       2       2       1   .common     
+     atdValue1                                  92A       2       2       1   .common     
+     atdValue2                                  92C       2       2       1   .common     
+MODULE:                 -- DCMotor.c.o --
+- PROCEDURES:
+     initDCMotor                               C07B      47      71       1   .text       
+     enableChannel                             C0C2       8       8       1   .text       
+     setMotor                                  C0CA      4E      78       1   .text       
+     setSpeed                                  C118      34      52       1   .text       
+     motorAHandler                             C14C       1       1       1   .text       
+     motorBHandler                             C14D       1       1       1   .text       
+     overFlowBitHandler                        C14E       7       7       1   .text       
+- VARIABLES:
+     overFlowA                                  901       1       1       1   .bss        
+     overFlowB                                  902       1       1       1   .bss        
+     motorAState                                903       1       1       1   .bss        
+     motorBState                                904       1       1       1   .bss        
+     _Vector_10                                FFEA       2       2       0   .abs_section_ffea
+     _Vector_11                                FFE8       2       2       0   .abs_section_ffe8
+     _Vector_16                                FFDE       2       2       0   .abs_section_ffde
 MODULE:                 -- SCI.c.o --
 - PROCEDURES:
-     getcSCI                                   C064      1B      27       1   .text       
-     SCIHandler                                C07F       C      12       1   .text       
+     SCIHandler                                C155       D      13       1   .text       
+     getcSCI                                   C162      3B      59       1   .text       
 - VARIABLES:
-     rxIndex                                    900       1       1       4   .bss        
+     rxIndex                                    905       1       1       4   .bss        
+     msgCount                                   906       1       1       1   .bss        
+     StartFlag                                  907       2       2       3   .bss        
      _Vector_20                                FFD6       2       2       0   .abs_section_ffd6
-     rxBuffer                                   926      10      16       1   .common     
+     rxBuffer                                   92E      10      16       1   .common     
 MODULE:                 -- Servo.c.o --
 - PROCEDURES:
-     TimerCh1Handler                           C08B      48      72       1   .text       
-     calculatePulse                            C0D3      2C      44       2   .text       
-     sweepServo                                C0FF      DE     222       1   .text       
-     fixedServo                                C1DD       A      10       1   .text       
+     TimerCh1Handler                           C19D      48      72       1   .text       
+     calculatePulse                            C1E5      2C      44       2   .text       
+     sweepServo                                C211      DE     222       1   .text       
+     fixedServo                                C2EF       A      10       1   .text       
 - VARIABLES:
-     PrevState                                  901       1       1       5   .bss        
-     calcFlag.2                                 902       1       1       3   .bss        
-     mode                                       903       1       1       3   .bss        
-     msDelay                                    904       4       4       2   .bss        
-     degree                                     908       1       1       1   .bss        
-     currentPosition                            909       2       2      15   .bss        
-     result.1                                   90B       2       2       1   .bss        
-     direction.3                                90D       1       1       3   .bss        
-     scaler.4                                   90E       4       4       4   .bss        
-     newPosition.5                              912       2       2       9   .bss        
-     distance.6                                 914       2       2       5   .bss        
-     state.7                                    916       1       1       2   .bss        
+     PrevState                                  909       1       1       5   .bss        
+     calcFlag.2                                 90A       1       1       3   .bss        
+     mode                                       90B       1       1       3   .bss        
+     msDelay                                    90C       4       4       2   .bss        
+     degree                                     910       1       1       1   .bss        
+     currentPosition                            911       2       2      15   .bss        
+     result.1                                   913       2       2       1   .bss        
+     direction.3                                915       1       1       3   .bss        
+     scaler.4                                   916       4       4       4   .bss        
+     newPosition.5                              91A       2       2       9   .bss        
+     distance.6                                 91C       2       2       5   .bss        
+     state.7                                    91E       1       1       2   .bss        
      _Vector_9                                 FFEC       2       2       0   .abs_section_ffec
 MODULE:                 -- Stepper.c.o --
 - PROCEDURES:
-     seekSwitch                                C1E7      7D     125       1   .text       
-     home                                      C264      3A      58       1   .text       
-     calculatePosition                         C29E      24      36       2   .text       
-     continuous                                C2C2      A1     161       1   .text       
-     relative                                  C363      9C     156       1   .text       
-     RTIhandler                                C3FF      25      37       1   .text       
+     seekSwitch                                C2F9      7D     125       1   .text       
+     home                                      C376      3A      58       1   .text       
+     calculatePosition                         C3B0      24      36       2   .text       
+     continuous                                C3D4      A1     161       1   .text       
+     relative                                  C475      9C     156       1   .text       
+     RTIhandler                                C511      25      37       1   .text       
 - VARIABLES:
      stepPattern                               C03B       8       8       4   .rodata     
-     MaxStep                                    917       2       2      17   .bss        
-     numStep                                    919       2       2      10   .bss        
-     index                                      91B       1       1      19   .bss        
-     calcFlag.2                                 91C       1       1       3   .bss        
-     calcFlag.3                                 91D       1       1       3   .bss        
-     stepType                                   91E       1       1      10   .bss        
-     mode                                       91F       1       1       3   .bss        
-     calcPosition.1                             920       2       2       1   .bss        
+     MaxStep                                    91F       2       2      17   .bss        
+     numStep                                    921       2       2      10   .bss        
+     index                                      923       1       1      19   .bss        
+     calcFlag.2                                 924       1       1       3   .bss        
+     calcFlag.3                                 925       1       1       3   .bss        
+     stepType                                   926       1       1      10   .bss        
+     mode                                       927       1       1       3   .bss        
+     calcPosition.1                             928       2       2       1   .bss        
      _Vector_7                                 FFF0       2       2       0   .abs_section_fff0
-     position                                   936       2       2       2   .common     
-     switchStatus                               938       1       1       6   .common     
-     direction                                  939       1       1      12   .common     
+     position                                   93E       2       2       2   .common     
+     switchStatus                               940       1       1       6   .common     
+     direction                                  941       1       1      12   .common     
 
 *********************************************************************************************
 MODULE STATISTIC
   Name                                      Data   Code  Const
 ---------------------------------------------------------------------------------------------
   mc9s12c32.c.o                              260      0      0
-  main.c.o                                     0      9      0
+  main.c.o                                     1     32      0
   Start12.c.o                                  0     49      0
   STDLIB.C.o (ansisi.lib)                      0     10      0
   rtshc12.c.o (ansisi.lib)                     0    361      0
   ADC.c.o                                      4     14      2
-  SCI.c.o                                     17     39      2
+  DCMotor.c.o                                  4    218      6
+  SCI.c.o                                     20     72      2
   Servo.c.o                                   22    348      2
   Stepper.c.o                                 15    573     10
-  other                                      256     12      2
+  other                                      256     12      7
 
 *********************************************************************************************
 SECTION USE IN OBJECT-ALLOCATION SECTION
 ---------------------------------------------------------------------------------------------
 SECTION: ".text"
-  main abs ATDhandler getcSCI SCIHandler TimerCh1Handler calculatePulse 
-  sweepServo fixedServo seekSwitch home calculatePosition continuous relative 
-  RTIhandler 
+  main abs ATDhandler initDCMotor enableChannel setMotor setSpeed 
+  motorAHandler motorBHandler overFlowBitHandler SCIHandler getcSCI 
+  TimerCh1Handler calculatePulse sweepServo fixedServo seekSwitch home 
+  calculatePosition continuous relative RTIhandler 
+SECTION: ".data"
+  motorSpeed 
 SECTION: ".bss"
-  rxIndex PrevState calcFlag.2 mode msDelay degree currentPosition result.1 
-  direction.3 scaler.4 newPosition.5 distance.6 state.7 MaxStep numStep index 
-  calcFlag.2 calcFlag.3 stepType mode calcPosition.1 
+  overFlowA overFlowB motorAState motorBState rxIndex msgCount StartFlag 
+  PrevState calcFlag.2 mode msDelay degree currentPosition result.1 direction.3 
+  scaler.4 newPosition.5 distance.6 state.7 MaxStep numStep index calcFlag.2 
+  calcFlag.3 stepType mode calcPosition.1 
 SECTION: ".init"
   Init _Startup 
 SECTION: ".rodata"
@@ -1077,6 +1107,12 @@ SECTION: ".common"
   atdValue1 atdValue2 rxBuffer position switchStatus direction 
 SECTION: ".abs_section_ffd2"
   _Vector_22 
+SECTION: ".abs_section_ffea"
+  _Vector_10 
+SECTION: ".abs_section_ffe8"
+  _Vector_11 
+SECTION: ".abs_section_ffde"
+  _Vector_16 
 SECTION: ".abs_section_ffd6"
   _Vector_20 
 SECTION: ".abs_section_ffec"
@@ -1088,8 +1124,8 @@ SECTION: ".abs_section_fff0"
 OBJECT LIST SORTED BY ADDRESS
      Name                                      Addr   hSize   dSize     Ref    Section   RLIB
 ---------------------------------------------------------------------------------------------
-     _PORTAB                                      0       2       2       0   .abs_section_0
-     _DDRAB                                       2       2       2       0   .abs_section_2
+     _PORTAB                                      0       2       2       4   .abs_section_0
+     _DDRAB                                       2       2       2       1   .abs_section_2
      _PORTE                                       8       1       1       0   .abs_section_8
      _DDRE                                        9       1       1       0   .abs_section_9
      _PEAR                                        A       1       1       0   .abs_section_a
@@ -1130,7 +1166,7 @@ OBJECT LIST SORTED BY ADDRESS
      _RTICTL                                     3B       1       1       0   .abs_section_3b
      _COPCTL                                     3C       1       1       0   .abs_section_3c
      _ARMCOP                                     3F       1       1       0   .abs_section_3f
-     _TIOS                                       40       1       1       0   .abs_section_40
+     _TIOS                                       40       1       1       2   .abs_section_40
      _CFORC                                      41       1       1       0   .abs_section_41
      _OC7M                                       42       1       1       0   .abs_section_42
      _OC7D                                       43       1       1       0   .abs_section_43
@@ -1139,9 +1175,9 @@ OBJECT LIST SORTED BY ADDRESS
      _TTOV                                       47       1       1       0   .abs_section_47
      _TCTL1                                      48       1       1       4   .abs_section_48
      _TCTL2                                      49       1       1       0   .abs_section_49
-     _TCTL3                                      4A       1       1       0   .abs_section_4a
+     _TCTL3                                      4A       1       1       4   .abs_section_4a
      _TCTL4                                      4B       1       1       0   .abs_section_4b
-     _TIE                                        4C       1       1       0   .abs_section_4c
+     _TIE                                        4C       1       1       1   .abs_section_4c
      _TSCR2                                      4D       1       1       0   .abs_section_4d
      _TFLG1                                      4E       1       1       0   .abs_section_4e
      _TFLG2                                      4F       1       1       0   .abs_section_4f
@@ -1183,12 +1219,12 @@ OBJECT LIST SORTED BY ADDRESS
      _SPIBR                                      DA       1       1       0   .abs_section_da
      _SPISR                                      DB       1       1       0   .abs_section_db
      _SPIDR                                      DD       1       1       0   .abs_section_dd
-     _PWME                                       E0       1       1       0   .abs_section_e0
-     _PWMPOL                                     E1       1       1       0   .abs_section_e1
-     _PWMCLK                                     E2       1       1       0   .abs_section_e2
-     _PWMPRCLK                                   E3       1       1       0   .abs_section_e3
-     _PWMCAE                                     E4       1       1       0   .abs_section_e4
-     _PWMCTL                                     E5       1       1       0   .abs_section_e5
+     _PWME                                       E0       1       1       2   .abs_section_e0
+     _PWMPOL                                     E1       1       1       2   .abs_section_e1
+     _PWMCLK                                     E2       1       1       2   .abs_section_e2
+     _PWMPRCLK                                   E3       1       1       1   .abs_section_e3
+     _PWMCAE                                     E4       1       1       2   .abs_section_e4
+     _PWMCTL                                     E5       1       1       1   .abs_section_e5
      _PWMSCLA                                    E8       1       1       0   .abs_section_e8
      _PWMSCLB                                    E9       1       1       0   .abs_section_e9
      _PWMCNT01                                   EC       2       2       0   .abs_section_ec
@@ -1196,10 +1232,10 @@ OBJECT LIST SORTED BY ADDRESS
      _PWMCNT45                                   F0       2       2       0   .abs_section_f0
      _PWMPER01                                   F2       2       2       0   .abs_section_f2
      _PWMPER23                                   F4       2       2       0   .abs_section_f4
-     _PWMPER45                                   F6       2       2       0   .abs_section_f6
+     _PWMPER45                                   F6       2       2       2   .abs_section_f6
      _PWMDTY01                                   F8       2       2       0   .abs_section_f8
      _PWMDTY23                                   FA       2       2       0   .abs_section_fa
-     _PWMDTY45                                   FC       2       2       0   .abs_section_fc
+     _PWMDTY45                                   FC       2       2       7   .abs_section_fc
      _PWMSDN                                     FE       1       1       0   .abs_section_fe
      _FCLKDIV                                   100       1       1       0   .abs_section_100
      _FSEC                                      101       1       1       0   .abs_section_101
@@ -1309,62 +1345,79 @@ OBJECT LIST SORTED BY ADDRESS
      _RDRAD                                     273       1       1       0   .abs_section_273
      _PERAD                                     274       1       1       0   .abs_section_274
      _PPSAD                                     275       1       1       0   .abs_section_275
-     rxIndex                                    900       1       1       4   .bss        
-     PrevState                                  901       1       1       5   .bss        
-     calcFlag.2                                 902       1       1       3   .bss        
-     mode                                       903       1       1       3   .bss        
-     msDelay                                    904       4       4       2   .bss        
-     degree                                     908       1       1       1   .bss        
-     currentPosition                            909       2       2      15   .bss        
-     result.1                                   90B       2       2       1   .bss        
-     direction.3                                90D       1       1       3   .bss        
-     scaler.4                                   90E       4       4       4   .bss        
-     newPosition.5                              912       2       2       9   .bss        
-     distance.6                                 914       2       2       5   .bss        
-     state.7                                    916       1       1       2   .bss        
-     MaxStep                                    917       2       2      17   .bss        
-     numStep                                    919       2       2      10   .bss        
-     index                                      91B       1       1      19   .bss        
-     calcFlag.2                                 91C       1       1       3   .bss        
-     calcFlag.3                                 91D       1       1       3   .bss        
-     stepType                                   91E       1       1      10   .bss        
-     mode                                       91F       1       1       3   .bss        
-     calcPosition.1                             920       2       2       1   .bss        
-     atdValue1                                  922       2       2       1   .common     
-     atdValue2                                  924       2       2       1   .common     
-     rxBuffer                                   926      10      16       1   .common     
-     position                                   936       2       2       2   .common     
-     switchStatus                               938       1       1       6   .common     
-     direction                                  939       1       1      12   .common     
+     motorSpeed                                 900       1       1       1   .data       
+     overFlowA                                  901       1       1       1   .bss        
+     overFlowB                                  902       1       1       1   .bss        
+     motorAState                                903       1       1       1   .bss        
+     motorBState                                904       1       1       1   .bss        
+     rxIndex                                    905       1       1       4   .bss        
+     msgCount                                   906       1       1       1   .bss        
+     StartFlag                                  907       2       2       3   .bss        
+     PrevState                                  909       1       1       5   .bss        
+     calcFlag.2                                 90A       1       1       3   .bss        
+     mode                                       90B       1       1       3   .bss        
+     msDelay                                    90C       4       4       2   .bss        
+     degree                                     910       1       1       1   .bss        
+     currentPosition                            911       2       2      15   .bss        
+     result.1                                   913       2       2       1   .bss        
+     direction.3                                915       1       1       3   .bss        
+     scaler.4                                   916       4       4       4   .bss        
+     newPosition.5                              91A       2       2       9   .bss        
+     distance.6                                 91C       2       2       5   .bss        
+     state.7                                    91E       1       1       2   .bss        
+     MaxStep                                    91F       2       2      17   .bss        
+     numStep                                    921       2       2      10   .bss        
+     index                                      923       1       1      19   .bss        
+     calcFlag.2                                 924       1       1       3   .bss        
+     calcFlag.3                                 925       1       1       3   .bss        
+     stepType                                   926       1       1      10   .bss        
+     mode                                       927       1       1       3   .bss        
+     calcPosition.1                             928       2       2       1   .bss        
+     atdValue1                                  92A       2       2       1   .common     
+     atdValue2                                  92C       2       2       1   .common     
+     rxBuffer                                   92E      10      16       1   .common     
+     position                                   93E       2       2       2   .common     
+     switchStatus                               940       1       1       6   .common     
+     direction                                  941       1       1      12   .common     
      Init                                      C000      29      41       1   .init       
      _Startup                                  C029       8       8       0   .init       
      stepPattern                               C03B       8       8       4   .rodata     
-     main                                      C043       9       9       1   .text       
-     abs                                       C04C       A      10       4   .text       
-     ATDhandler                                C056       E      14       1   .text       
-     getcSCI                                   C064      1B      27       1   .text       
-     SCIHandler                                C07F       C      12       1   .text       
-     TimerCh1Handler                           C08B      48      72       1   .text       
-     calculatePulse                            C0D3      2C      44       2   .text       
-     sweepServo                                C0FF      DE     222       1   .text       
-     fixedServo                                C1DD       A      10       1   .text       
-     seekSwitch                                C1E7      7D     125       1   .text       
-     home                                      C264      3A      58       1   .text       
-     calculatePosition                         C29E      24      36       2   .text       
-     continuous                                C2C2      A1     161       1   .text       
-     relative                                  C363      9C     156       1   .text       
-     RTIhandler                                C3FF      25      37       1   .text       
-     _BDIVMODU                                 C424       A      10       1   RUNTIME     
-     _LNEG                                     C42E       D      13       1   RUNTIME     
-     _LMULU16x32                               C43B       F      15       1   RUNTIME     
-     _LMULS16x32                               C44A      1F      31       1   RUNTIME     
-     _lDivMod                                  C469      BE     190       3   RUNTIME     
-     _LDIVU                                    C527       E      14       2   RUNTIME     
-     _NEG_P                                    C535       F      15       4   RUNTIME     
-     _LDIVS                                    C544      35      53       2   RUNTIME     
-     _CASE_CHECKED_BYTE                        C579      14      20       1   RUNTIME     
+     main                                      C043      20      32       1   .text       
+     abs                                       C063       A      10       4   .text       
+     ATDhandler                                C06D       E      14       1   .text       
+     initDCMotor                               C07B      47      71       1   .text       
+     enableChannel                             C0C2       8       8       1   .text       
+     setMotor                                  C0CA      4E      78       1   .text       
+     setSpeed                                  C118      34      52       1   .text       
+     motorAHandler                             C14C       1       1       1   .text       
+     motorBHandler                             C14D       1       1       1   .text       
+     overFlowBitHandler                        C14E       7       7       1   .text       
+     SCIHandler                                C155       D      13       1   .text       
+     getcSCI                                   C162      3B      59       1   .text       
+     TimerCh1Handler                           C19D      48      72       1   .text       
+     calculatePulse                            C1E5      2C      44       2   .text       
+     sweepServo                                C211      DE     222       1   .text       
+     fixedServo                                C2EF       A      10       1   .text       
+     seekSwitch                                C2F9      7D     125       1   .text       
+     home                                      C376      3A      58       1   .text       
+     calculatePosition                         C3B0      24      36       2   .text       
+     continuous                                C3D4      A1     161       1   .text       
+     relative                                  C475      9C     156       1   .text       
+     RTIhandler                                C511      25      37       1   .text       
+     _BDIVMODU                                 C536       A      10       1   RUNTIME     
+     _LNEG                                     C540       D      13       1   RUNTIME     
+     _LMULU16x32                               C54D       F      15       1   RUNTIME     
+     _LMULS16x32                               C55C      1F      31       1   RUNTIME     
+     _lDivMod                                  C57B      BE     190       3   RUNTIME     
+     _LDIVU                                    C639       E      14       2   RUNTIME     
+     _NEG_P                                    C647       F      15       4   RUNTIME     
+     _LDIVS                                    C656      35      53       2   RUNTIME     
+     _CASE_CHECKED_BYTE                        C68B      14      20       3   RUNTIME     
      _Vector_22                                FFD2       2       2       0   .abs_section_ffd2
      _Vector_20                                FFD6       2       2       0   .abs_section_ffd6
+     _Vector_16                                FFDE       2       2       0   .abs_section_ffde
+     _Vector_11                                FFE8       2       2       0   .abs_section_ffe8
+     _Vector_10                                FFEA       2       2       0   .abs_section_ffea
      _Vector_9                                 FFEC       2       2       0   .abs_section_ffec
      _Vector_7                                 FFF0       2       2       0   .abs_section_fff0
 
@@ -1384,6 +1437,8 @@ rtshc12.c.o (ansisi.lib):
   _FPCMP 
 ADC.c.o:
   initADC initADCV2 readChannel 
+DCMotor.c.o:
+  disableChannel setMotorAlternate 
 SCI.c.o:
   InitSCI putcSCI putsSCI 
 Servo.c.o:
@@ -1401,7 +1456,13 @@ ADC.c.o:
 *********************************************************************************************
 COPYDOWN SECTION
 ---------------------------------------------------------------------------------------------
-------- ROM-ADDRESS: 0xC58D ---- SIZE       2 ---
+------- ROM-ADDRESS: 0xC69F ---- SIZE       4 ---
+Filling bytes inserted
+ 00010900
+------- ROM-ADDRESS: 0xC6A3 ---- RAM-ADDRESS: 0x900 ---- SIZE       1 ---
+Name of initialized Object : motorSpeed
+ 3C
+------- ROM-ADDRESS: 0xC6A4 ---- SIZE       2 ---
 Filling bytes inserted
  0000
 
@@ -1410,9 +1471,18 @@ OBJECT-DEPENDENCIES SECTION
 ---------------------------------------------------------------------------------------------
 Init                      USES _startupData 
 _Startup                  USES __SEG_END_SSTACK Init main 
+main                      USES initDCMotor setMotor enableChannel motorSpeed 
+                                setSpeed 
 ATDhandler                USES _ATDDR0 atdValue1 _ATDDR1 atdValue2 _ATDSTAT0 
-getcSCI                   USES rxIndex rxBuffer _BDIVMODU 
+initDCMotor               USES _DDRAB _PWMCTL _PWMPRCLK _PWMPOL _PWMCAE 
+                                _PWMCLK _PWMPER45 _PWMDTY45 _TIOS _TCTL3 motorAState 
+                                motorBState _TIE 
+enableChannel             USES _PWME 
+setMotor                  USES _CASE_CHECKED_BYTE _PORTAB _PWMDTY45 
+setSpeed                  USES _CASE_CHECKED_BYTE _PWMDTY45 
+overFlowBitHandler        USES overFlowA overFlowB 
 SCIHandler                USES _SCISR1 _SCIDRL getcSCI 
+getcSCI                   USES msgCount StartFlag rxIndex rxBuffer _BDIVMODU 
 TimerCh1Handler           USES mode sweepServo fixedServo PrevState 
                                 currentPosition _TC1 _TCTL1 
 calculatePulse            USES degree _LMULS16x32 _LDIVS result.1 
@@ -1438,6 +1508,9 @@ _LDIVU                    USES _lDivMod
 _LDIVS                    USES _NEG_P _lDivMod 
 _Vector_22                USES ATDhandler 
 _Vector_20                USES SCIHandler 
+_Vector_16                USES overFlowBitHandler 
+_Vector_11                USES motorBHandler 
+_Vector_10                USES motorAHandler 
 _Vector_9                 USES TimerCh1Handler 
 _Vector_7                 USES RTIhandler 
 
@@ -1447,7 +1520,19 @@ DEPENDENCY TREE
  main and _Startup Group
  | 
  +- main                
- |    
+ |  | 
+ |  +- initDCMotor         
+ |  |    
+ |  +- setMotor            
+ |  |  | 
+ |  |  +- _CASE_CHECKED_BYTE  
+ |  |       
+ |  +- enableChannel       
+ |  |    
+ |  +- setSpeed            
+ |     | 
+ |     +- _CASE_CHECKED_BYTE   (see above)
+ |        
  +- _Startup            
     | 
     +- Init                
@@ -1457,6 +1542,18 @@ DEPENDENCY TREE
  _Vector_22          
  | 
  +- ATDhandler          
+      
+ _Vector_10          
+ | 
+ +- motorAHandler       
+      
+ _Vector_11          
+ | 
+ +- motorBHandler       
+      
+ _Vector_16          
+ | 
+ +- overFlowBitHandler  
       
  _Vector_20          
  | 
@@ -1500,8 +1597,8 @@ DEPENDENCY TREE
  | 
  +- RTIhandler          
     | 
-    +- _CASE_CHECKED_BYTE  
-    |    
+    +- _CASE_CHECKED_BYTE   (see above)
+    |  
     +- seekSwitch          
     |    
     +- home                
@@ -1526,6 +1623,6 @@ STATISTIC SECTION
 
 ExeFile:
 --------
-Number of blocks to be downloaded: 10
-Total size of all blocks to be downloaded: 1433
+Number of blocks to be downloaded: 13
+Total size of all blocks to be downloaded: 1718
 

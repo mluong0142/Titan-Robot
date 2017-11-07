@@ -37,7 +37,6 @@
 #define CH4_COUNT_CLK_DIRECTLY  CLR_BITS(PWMCLK,PWMCLK_PCLK4_MASK)
 #define CH5_COUNT_CLK_DIRECTLY  CLR_BITS(PWMCLK,PWMCLK_PCLK5_MASK)
 
-
 //Channels Enable Masks
 #define CH0 PWME_PWME0_MASK
 #define CH1 PWME_PWME1_MASK
@@ -55,7 +54,6 @@
 #define _22Khz  182U
 #define _22VKhz 255U
 #define _70P    127U
-
 
 //Channel Duty Cycle
 #define CH0_DUTY PWMDTY0
@@ -80,14 +78,11 @@
 #define MOT1_BUS(data) FORCE_BITS(PORTB,MOT1_MASK,data)
 #define MOT2_BUS(data) FORCE_BITS(PORTB,MOT2_MASK,data)
 
-
 //Directions Motor 1
-
 #define FWD1   0x04
 #define BKD1   0x02
 #define STOPH1 0x06
 #define STOPL1 0x00
-
 
 //Directions Motor 2
 #define FWD2   0x08
@@ -95,22 +90,26 @@
 #define STOPH2 0x09
 #define STOPL2 0x00
 
-
-
 //Motor State
 #define SPEED 0U
 #define DIREC 1U
-
 
 //Motor speed flag 
 #define CH4S  0U
 #define CH5S  1U
 
-
 //Motor modifier flag
 #define MOT1  0U
 #define MOT2  1U
 #define MOT12 2U
+
+//Encorder defines
+#define RISING  0U
+#define FALLING 1U
+#define PERIOD  2U
+#define ENABLE_CHNL_2_3 SET_BITS(TIE,TIE_C2I_MASK|TIE_C3I_MASK)
+
+
 
 void initDCMotor(void);
 void disableChannel(unsigned char channel);
@@ -121,6 +120,11 @@ void setMotorAlternate(unsigned directionM1,unsigned directionM2);
 
 // Test case functions
 void setSpeed(unsigned char speed,unsigned char motor);
+
+
+
+//Encorder functions
+void initEncorder(void);
 
 /*Old functions
 void setMotor(unsigned char modifier, unsigned char specifier,volatile unsigned char attribute);*/ 

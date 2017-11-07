@@ -10,15 +10,18 @@
 
 
 
-
+unsigned char motorSpeed = 60;
 void main(void) {
   /* put your own code here */
   
- 
+ initDCMotor();
+ setMotor(60,BKD1,MOT1);
+ enableChannel(CH4|CH5);
+ EnableInterrupts;
 
 
   for(;;) {
-    _FEED_COP(); /* feeds the dog */
+   setSpeed(motorSpeed,MOT1);
   } /* loop forever */
   /* please make sure that you never leave main */
 }

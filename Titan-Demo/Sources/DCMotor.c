@@ -1,6 +1,12 @@
 #include "DCMotor.h"
 #include <mc9s12c32.h>
 #include <stdarg.h>
+#include "TimerModule.h"
+
+volatile static unsigned char motorAState;
+volatile static unsigned char motorBState;
+volatile static unsigned char overFlowA = 0;
+volatile static unsigned char overFlowB = 0;
 
 /********************initDCMotor()*******************************************
 Purpose:Initialize the DC Motors
@@ -9,6 +15,7 @@ Input:None
 void initDCMotor() 
 {
   
+  //DC Motor PWM Initialization
   INIT_MOT_DDR;
     
   PWMCTL = MODE_8BIT;
@@ -31,6 +38,18 @@ void initDCMotor()
   PWMDTY4 =_22Khz;
   PWMDTY5 =_22VKhz;
   
+  //Encorder Timer module Initialization
+  MAKE_CHNL_IC(2);
+  MAKE_CHNL_IC(3);
+  
+  SET_IC_EDGE(2,IC_EDGE_RISING);
+  SET_IC_EDGE(3,IC_EDGE_RISING);
+  
+  motorAState = RISING;
+  motorBState = RISING;
+  
+  ENABLE_CHNL_2_3;
+  
    
 }
 /********************enableChannel()*******************************************
@@ -45,7 +64,6 @@ void enableChannel(unsigned char channel)
 Purpose:Disables the PWM Channel
 Input: char value - PWM bit mask value
 **************************************************************************/ 
-
 void disableChannel(unsigned char channel) 
 {
   CLR_BITS(PWME,channel);
@@ -90,12 +108,10 @@ void setMotorAlternate(unsigned directionM1,unsigned directionM2)
   MOT2_BUS(directionM2);
 }
 
-
 /********************setSpeed()************************
 Purpose:Set the motor speed of each motor
 Input: char value - motor speed ie:0-100%
 ****************************************************/ 
-
 void setSpeed(unsigned char speed,unsigned char motor) 
 {
   unsigned char pwm = (unsigned char)((231U*(speed)+2369U+50)/100U); //+50 to round up the answer
@@ -115,8 +131,32 @@ void setSpeed(unsigned char speed,unsigned char motor)
     PWMDTY5 = pwm;
     break;
   }
-  
 }
+
+interrupt VectorNumber_Vtimch2 void motorAHandler(void) 
+{
+  
+
+}
+
+interrupt VectorNumber_Vtimch3 void motorBHandler(void) 
+{
+
+
+
+
+}
+
+interrupt VectorNumber_Vtimovf void overFlowBitHandler(void) 
+{
+
+     overFlowA++;
+     overFlowB++;
+}
+  
+
+
+  
 
 /***************Old functions**********************
 void setMotor(unsigned char modifier, unsigned char specifier,volatile unsigned char attribute) 
