@@ -1,0 +1,148 @@
+/* this is the linux 2.2.x way of handling joysticks. It allows an arbitrary
+ * number of axis and buttons. It's event driven, and has full signed int
+ * ranges of the axis (-32768 to 32767). It also lets you pull the joysticks
+ * name. The only place this works of that I know of is in the linux 1.x 
+ * joystick driver, which is included in the linux 2.2.x kernels
+
+
+   	Author: Michael Luong,  with the assistance of:
+   		https://www.kernel.org/doc/Documentation/input/joystick-api.txt
+   	&	http://archives.seul.org/linuxgames/Aug-1999/msg00107.html
+   	Date:	October 30, 2017
+   	Purpose:
+   		- Uses simple logic to       	
+
+ */
+
+
+
+#include <math.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <sys/ioctl.h>
+#include <linux/joystick.h>
+
+#define JOY_DEV "/dev/input/js0"	// Directory path of joystick controls
+#define PI 3.14159265
+
+int main()
+{
+	int joy_fd, *axis=NULL, num_of_axis=0, num_of_buttons=0, x;
+	char *button=NULL, name_of_joystick[80];
+	struct js_event js;
+
+		/* check for proper device file open */
+	if( ( joy_fd = open( JOY_DEV , O_RDONLY)) == -1 )
+	{
+		printf( "Couldn't open joystick\n" );
+		return -1;
+	}
+
+
+/* 	ioctl () - control device
+			 - manipulates the underlying device paramets of special files
+			   for example, the special joystick files that are used to read
+			   the input values of the joystick
+*/	
+
+	ioctl( joy_fd, JSIOCGAXES, &num_of_axis );
+	ioctl( joy_fd, JSIOCGBUTTONS, &num_of_buttons );
+	ioctl( joy_fd, JSIOCGNAME(80), &name_of_joystick );
+
+	axis = (int *) calloc( num_of_axis, sizeof( int ) );
+
+	// this calloc isn't needed anymore but "Segmentation fault (core dumped)"
+	// is printed when commented out.
+	button = (char *) calloc( num_of_buttons, sizeof( char ) );	
+
+	printf("Joystick detected: %s\n\t%d axis\n\t%d buttons\n\n"
+		, name_of_joystick
+		, num_of_axis
+		, num_of_buttons );
+
+	fcntl( joy_fd, F_SETFL, O_NONBLOCK );	/* use non-blocking mode */
+
+	while( 1 ) 	/* infinite loop */
+	{
+
+			/* read the joystick state */
+		read(joy_fd, &js, sizeof(struct js_event));
+		
+			/* see what to do with the event */
+		switch (js.type & ~JS_EVENT_INIT)
+		{
+			case JS_EVENT_AXIS:
+				axis   [ js.number ] = js.value;
+				if (axis[1] == -32767){
+					printf("UP");
+					//return 1;
+				}
+
+				else if (axis[1] == 32767){
+					printf("DOWN");
+					//return 2;
+				}
+
+				else if (axis[0] == -32767){
+					printf("LEFT");
+					//return 3;
+				}
+
+				else if (axis[0] == 32767){
+					printf("RIGHT");
+					//return 4;
+				}
+
+
+				//else if (axis[3] == )
+				//else
+					//printf("stop");
+				break;
+			case JS_EVENT_BUTTON:
+				button [ js.number ] = js.value;
+				if (button[4] == 1){
+					printf("tiltUp");
+					//return 6;
+				}
+				else if (button[6] == 1){
+					printf("tiltDown");
+					//return 6;
+				}
+
+				break;
+
+		}
+
+			/* print the results */
+		// Left Joystick
+		printf( "X: %6d  Y: %6d  ", axis[0], axis[1] );
+		
+		double val = 180 / PI;
+		double ret = atan2((double)axis[0], (double)axis[1]) * val;
+		printf("HERE LOOK HERE %1f degrees", ret);	
+		//while ((axis[1] < "0") || (axis[1] > '0')){
+			
+		//}
+
+		//	Left trigger
+		if( num_of_axis > 2 )
+			printf("Z: %6d  ", axis[2] );
+		
+		// 	Right Joystick	
+		if( num_of_axis > 3 )
+			printf("R: %6d  ", axis[3] );
+		//	Other buttons
+		for( x=0 ; x<num_of_buttons ; ++x )
+			printf("B%d: %d  ", x, button[x] );
+		
+
+		// Carriage Return: repeats the loop until the user has pressed the Return key.	
+		printf("  \r");	
+		fflush(stdout);
+	}
+
+	close( joy_fd );	/* too bad we never get here */
+	return 0;
+}
