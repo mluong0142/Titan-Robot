@@ -32,6 +32,10 @@ Ensure that “MODE” light is off
 #include <sys/ioctl.h>
 #include <linux/joystick.h>
 
+/* 	To search for correct input event from controller,
+	ls /dev/input
+	generally, it will be js0 OR event0
+*/
 #define JOY_DEV "/dev/input/js0"	// Directory path of joystick controls
 #define PI 3.14159265
 
