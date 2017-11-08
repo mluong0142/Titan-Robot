@@ -13,7 +13,15 @@
    		- Uses simple logic to       	
 
  */
+/* TO COMPILE ON LINUX
+gcc -o Joystick Joystick.c -lm
 
+BEFORE USING JOYSTICK:
+Make sure that the switch on the tail end of the controller is set ‘D’
+Test to make sure values are being received
+Ensure that “MODE” light is off
+
+*/
 
 
 #include <math.h>
