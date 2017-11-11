@@ -151,8 +151,11 @@ int main()
 		else if(ret > 135 && ret <= 157.5){
 			printf("70 Degrees ");
 		}
-		else if(ret > 157.5 && ret > -157.5){
+		else if(ret > 157.5 && ret <= 180.54){
 			printf("90 Degrees ");
+		}
+		else if( ret < -157.5 && ret >= -178.818127){
+			printf("90 Degrees");
 		}
 
 
